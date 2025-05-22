@@ -8,6 +8,7 @@
   <body>
     <header>
       <h1>Todo Application</h1>
+      <p><%= time_based_greeting %></p>
       <p>Visit count: <%= @visit_count %></p>
     </header>
 
@@ -16,7 +17,8 @@
     </main>
 
     <footer>
-      <p>Last visited: <%= session[:last_visited] %></p>
+      <p>Last visited: <%= time_ago_in_words(session[:last_visited]) %> ago</p>
+      <p>visits to this page: <%= @current_page_visits %></p>
     </footer>
   </body>
 </html>
