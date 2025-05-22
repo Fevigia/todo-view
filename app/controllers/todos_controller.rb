@@ -1,4 +1,5 @@
 class TodosController < ApplicationController
+  before_action :track_page_visits
   before_action :set_todo, only: %i[ show edit update destroy ]
 
   # GET /todos or /todos.json
@@ -13,15 +14,30 @@ class TodosController < ApplicationController
 
   # GET /todos/1 or /todos/1.json
   def show
+    session[:last_visited] = Time.current
+    session[:visit_count] ||= 0
+    session[:visit_count] += 1
+    @visit_count = session[:visit_count]
+
   end
 
   # GET /todos/new
   def new
+    session[:last_visited] = Time.current
+    session[:visit_count] ||= 0
+    session[:visit_count] += 1
+    @visit_count = session[:visit_count]
+
     @todo = Todo.new
   end
 
   # GET /todos/1/edit
   def edit
+    session[:last_visited] = Time.current
+    session[:visit_count] ||= 0
+    session[:visit_count] += 1
+    @visit_count = session[:visit_count]
+
   end
 
   # POST /todos or /todos.json
@@ -63,6 +79,14 @@ class TodosController < ApplicationController
   end
 
   private
+def track_page_visits
+  session[:page_visits] ||= {}
+  page_path = request.path
+  session[:page_visits][page_path] ||= 0
+  session[:page_visits][page_path] += 1
+  @current_page_visits = session[:page_visits][page_path]
+
+end
     # Use callbacks to share common setup or constraints between actions.
     def set_todo
       @todo = Todo.find(params.expect(:id))
